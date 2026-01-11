@@ -1,0 +1,129 @@
+[package]
+name = "hellenic-poetry-ai"
+version = "0.1.0"
+edition = "2021"
+authors = ["Hellenic Poetry AI Team"]
+description = "AI-powered poetry generation and Greek language learning through interactive theater"
+license = "MIT"
+repository = "https://github.com/hellenic-poetry-ai/hellenic-poetry-ai"
+keywords = ["poetry", "greek", "ai", "learning", "theater"]
+categories = ["text-processing", "education", "games"]
+
+[dependencies]
+# Async runtime
+tokio = { version = "1.35", features = ["full"] }
+async-trait = "0.1"
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+serde_yaml = "0.9"
+toml = "0.8"
+
+# HTTP client for AI APIs
+reqwest = { version = "0.11", features = ["json", "rustls-tls"] }
+hyper = "0.14"
+
+# Error handling
+anyhow = "1.0"
+thiserror = "1.0"
+
+# Logging and tracing
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "fmt", "ansi", "json"] }
+log = "0.4"
+env_logger = "0.10"
+
+# CLI
+clap = { version = "4.4", features = ["derive", "cargo", "env"] }
+indicatif = "0.17"
+colored = "2.1"
+dialoguer = "0.11"
+
+# UUID and time
+uuid = { version = "1.6", features = ["v4", "serde"] }
+chrono = { version = "0.4", features = ["serde"] }
+
+# Database
+sqlx = { version = "0.7", features = ["sqlite", "runtime-tokio", "chrono", "uuid"] }
+rusqlite = { version = "0.30", features = ["bundled"], optional = true }
+
+# Text processing
+regex = "1.10"
+unicode-segmentation = "1.10"
+unicode-normalization = "0.1"
+
+# Random generation
+rand = "0.8"
+
+# Configuration
+config = "0.13"
+
+# Concurrency
+parking_lot = "0.12"
+dashmap = "5.5"
+
+# Rate limiting
+governor = "0.6"
+
+# Caching
+cached = "0.46"
+
+# Template engine
+tera = "1.19"
+
+# Audio processing (for pronunciation)
+rodio = { version = "0.17", optional = true }
+
+# Web framework (for future web interface)
+axum = { version = "0.7", optional = true }
+tower = { version = "0.4", optional = true }
+tower-http = { version = "0.5", features = ["cors", "trace"], optional = true }
+
+[dev-dependencies]
+mockito = "1.2"
+tokio-test = "0.4"
+proptest = "1.4"
+criterion = "0.5"
+
+[features]
+default = ["cli", "sqlite"]
+cli = []
+sqlite = ["rusqlite"]
+audio = ["rodio"]
+web = ["axum", "tower", "tower-http"]
+full = ["cli", "sqlite", "audio", "web"]
+
+[[bin]]
+name = "hellenic"
+path = "src/main.rs"
+
+[[example]]
+name = "generate_poem"
+path = "examples/generate_poem.rs"
+
+[[example]]
+name = "greek_lesson"
+path = "examples/greek_lesson.rs"
+
+[[example]]
+name = "interactive_play"
+path = "examples/interactive_play.rs"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+strip = true
+
+[profile.dev]
+opt-level = 0
+debug = true
+
+[profile.test]
+opt-level = 1
+
+# Benchmarks
+[[bench]]
+name = "poetry_generation"
+harness = false

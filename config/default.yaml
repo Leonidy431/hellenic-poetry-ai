@@ -1,0 +1,84 @@
+# Academia Lux - Конфигурация по умолчанию
+
+app:
+  name: "Academia Lux"
+  version: "0.1.0"
+  environment: "development"  # development, production
+  port: 8080
+
+database:
+  url: "sqlite://academia_lux.db"
+  max_connections: 10
+  timeout_seconds: 30
+
+ai:
+  provider: "openai"  # openai, anthropic, local
+  openai_api_key: null  # Установите через переменную окружения OPENAI_API_KEY
+  anthropic_api_key: null  # Установите через переменную окружения ANTHROPIC_API_KEY
+  deepl_api_key: null  # Установите через переменную окружения DEEPL_API_KEY
+  suno_api_key: null  # Установите через переменную окружения SUNO_API_KEY
+  text_model: "gpt-4"
+  image_model: "dall-e-3"
+  max_tokens: 2000
+  temperature: 0.7
+
+telegram:
+  bot_token: ""  # Установите через переменную окружения TELEGRAM_BOT_TOKEN
+  webhook_url: null
+  allowed_users: null  # null = все пользователи разрешены
+
+alice:
+  skill_id: ""  # ID навыка Яндекс Алисы
+  oauth_token: ""  # OAuth токен
+  webhook_url: ""  # URL для webhook
+
+poetry:
+  default_styles:
+    - "lyric"
+    - "epic"
+    - "dramatic"
+    - "pastoral"
+  languages:
+    - "russian"
+    - "greek"
+    - "bulgarian"
+    - "english"
+  max_lines: 50
+  use_rhyme: true
+
+learning:
+  supported_languages:
+    - "greek"
+    - "russian"
+    - "bulgarian"
+  levels:
+    - "A1"
+    - "A2"
+    - "B1"
+    - "B2"
+    - "C1"
+    - "C2"
+  words_per_lesson: 20
+  use_audio: true
+
+theater:
+  genres:
+    - "comedy"
+    - "drama"
+    - "fantasy"
+    - "historical"
+    - "biblical"
+  max_scenes: 10
+  voting_time_seconds: 60
+  min_votes: 5
+
+orthodox:
+  bible_path: "data/bible_texts"
+  saints_path: "data/saints_lives"
+  calendar_path: "data/orthodox_calendar.json"
+  use_apologetics: true
+
+logging:
+  level: "info"  # trace, debug, info, warn, error
+  format: "text"  # text, json
+  file_path: null  # null = только консоль
