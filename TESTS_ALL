@@ -1,0 +1,904 @@
+Greek Language Proficiency Analyzer
+Module
+Модуль для диагностики и адаптивного обучения греческому языку (A1-C2)
+📋
+Описание проекта
+Назначение: Автоматический анализ текстов на греческом языке с целью:
+1. Определение уровня CEFR (A1, A2, B1, B2, C1, C2) на основе лексического
+анализа и структурной сложности
+2. Диагностика грамматических ошибок с классификацией по темам и типам
+нарушений
+3. Краткое описание ошибок с рекомендациями по корректировке
+4. Генерация адаптивных тестов с объяснением ошибок пользователя и
+траекторией подготовки к экзамену на уровень выше
+Целевая аудитория: Изучающие греческий язык, стремящиеся перейти с текущего
+уровня (A2, B1) на более высокий уровень (B1+, B2, C1)
+Ключевая метрика успеха: Повышение балла на официальных экзаменах CEFR на
+1-2 уровня за 3-6 месяцев использования
+🏗️Архитектура модуля
+┌─────────────────────────────────────────────────────────┐
+│ USER INPUT (Greek Text) │
+└──────────────────────┬──────────────────────────────────┘
+│
+┌─────────────┼─────────────┐
+│ │ │
+┌────▼────┐ ┌───▼────┐ ┌───▼────┐
+│Lexical │ │Syntactic│ │Semantic│
+│Analysis │ │Analysis │ │Analysis│
+└────┬────┘ └───┬────┘ └───┬────┘
+│ │ │
+└─────────────┼─────────────┘
+│
+┌─────────────▼─────────────┐
+│ CEFR Level Detection │
+│ & Error Classification │
+└─────────────┬─────────────┘
+│
+┌──────────────────┼──────────────────┐
+│ │ │
+┌──▼───┐ ┌───▼────┐ ┌───▼────┐
+│Level │ │Grammar │ │ Error │
+│Report│ │Issues │ │Details │
+└──────┘ └────────┘ └────────┘
+│ │ │
+└──────────────────┼──────────────────┘
+│
+┌─────────────▼─────────────┐
+│ Adaptive Test Generator │
+│ (based on error profile) │
+└─────────────┬─────────────┘
+│
+┌─────────────▼─────────────┐
+│ Interactive Tests with │
+│ Real-time Feedback & │
+│ Error Explanations │
+└───────────────────────────┘
+📊
+Модуль 1: Определение уровня CEFR
+Алгоритм диагностики
+Входные параметры анализа:
+Длина текста (слова/символы)
+Словарный состав (частотность слов по корпусу)
+Морфологическая сложность (граммемы, падежи, времена)
+Синтаксическая структура (простые vs. сложные предложения)
+Количество редких/специальных лексем
+Критерии оценки по уровням:
+Ур
+ов
+ен
+ь
+Слов
+арь
+Грамматика Синтаксис Примеры
+A1
+500-
+1000
+слов
+(базо
+вые)
+Настоящее
+время,
+единственное
+число, простые
+глаголы
+Только простые
+предложения,
+без подчинения
+Είμαι
+ευχαριστημέ
+νος. Έχω ένα
+σπίτι.
+A2
+1000-
+1500
+слов
+Прошедшие
+времена
+(имперфект),
+множественное
+число,
+основные
+местоимения
+Простое союзное
+подчинение (και,
+αλλά, γιατί)
+Χθες πήγα
+στο σχολείο
+και
+συνάντησα
+φίλους.
+B1
+1500-
+2500
+слов
+Сослагательное
+наклонение,
+условные
+конструкции,
+модальные
+глаголы
+Сложные
+периоды с
+причастиями,
+причинными/
+временными
+придаточными
+Εάν ήμουν
+στη θέση
+σας, θα
+πήγαινα στο
+σπίτι γιατί
+ήταν αργά.
+B2
+2500-
+3500
+слов
+Пассив,
+перфект,
+условные
+предложения II
+типа,
+лексическое
+разнообразие
+Многоуровневое
+подчинение,
+причастные
+обороты,
+инверсия
+Αν και
+εργάστηκα
+πολύ, δεν
+κατάφερα να
+ολοκληρώσω
+το έργο.
+C1
+3500-
+5000
+слов
+Редкие формы,
+синонимия,
+прецизионное
+использование
+модальности
+Риторические
+конструкции,
+имплицитная
+информация,
+стилистическое
+варьирование
+Η ικανότητα
+που
+επιδεικνύετε
+σε ζητήματα
+ηθικής
+διάσταση...
+C2 5000
++
+Полная
+овладение,
+Любая
+синтаксическая
+Κατά την
+άποψη του
+Ур
+ов
+ен
+ь
+Слов
+арь
+Грамматика Синтаксис Примеры
+слов нюансы,
+идиоматика,
+регистры
+структура,
+искусственный
+дискурс
+συγγραφέα, η
+περιπέτεια
+αποτελεί
+ουσιώδη...
+Расчётная формула:
+CEFR_Level = 0.3 × LexicalScore + 0.4 × GrammarScore + 0.2 × SyntaxScore + 0.1 ×
+ComplexityScore
+from collections import Counter
+import nlp_library # SpaCy для греческого, или GyGre
+class CEFRDetector:
+def init(self, greek_corpus_frequency_dict):
+self.freq_dict = greek_corpus_frequency_dict # Частоты слов
+self.cefr_vocabulary = {
+'A1': set([...]), # Базовые 500 слов
+'A2': set([...]), # 1000-1500 слов
+# ... до C2
+}
+def analyze_text(self, text):
+tokens = self.tokenize_greek(text)
+# Лексический анализ
+lexical_score = self._calculate_lexical_score(tokens)
+# Грамматический анализ
+grammar_score = self._analyze_grammar(tokens)
+# Синтаксический анализ
+syntax_score = self._analyze_syntax(text)
+# Сложность
+complexity_score = self._calculate_complexity(text)
+Реализация (Python)
+# Общий уровень
+cefr_level = self._determine_cefr_level(
+lexical_score, grammar_score, syntax_score, complexity_score
+)
+return {
+'level': cefr_level,
+'confidence': 0.85,
+'lexical_score': lexical_score,
+'grammar_score': grammar_score,
+'syntax_score': syntax_score,
+}
+def _calculate_lexical_score(self, tokens):
+# Процент слов из каждого уровня CEFR
+scores = {}
+for level in ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']:
+match_count = sum(1 for t in tokens if t in self.cefr_vocabulary[level])
+scores[level] = match_count / len(tokens) if tokens else 0
+return scores
+def _analyze_grammar(self, tokens):
+# POS-tagging, анализ морфологических категорий
+pos_tags = self.pos_tagger.tag(tokens)
+# Подсчёт глагольных форм, падежей, времён
+tense_complexity = self._count_tense_forms(pos_tags)
+case_diversity = self._count_case_diversity(pos_tags)
+return (tense_complexity + case_diversity) / 2
+def _analyze_syntax(self, text):
+# Глубинный парсинг (зависимостный или фразовый)
+parse_tree = self.dependency_parser.parse(text)
+depth = self._calculate_tree_depth(parse_tree)
+subordination = self._count_subordination(parse_tree)
+return (depth + subordination) / 2
+def _determine_cefr_level(self, lex, gram, syn, comp):
+score = 0.3 * lex['B1'] + 0.4 * gram + 0.2 * syn + 0.1 * comp
+# Логика маппирования на CEFR
+if score < 0.3:
+return 'A1'
+elif score < 0.5:
+return 'A2'
+# ... и т.д.
+return 'C2'
+Ошибки категоризируются по темам:
+🔍
+Модуль 2: Диагностика грамматических ошибок
+Классификация грамматических нарушений
+Катего
+рия
+Типы ошибок Примеры
+Коррек
+тировк
+а
+Соглас
+ование
+Род-число-падеж
+прилагательного и
+существительного; время
+глагола и контекст
+Το αγόρι ειναι
+μεγάλη
+(неверный род)
+Το αγόρι
+ειναι
+μεγάλο
+Глагол
+ьные
+форм
+ы
+Неправильные
+спряжения; confusables
+(έχω vs. είμαι)
+Έχεις ένα σπίτι
+→
+(вспомогательн
+ый глагол)
+Είσαι
+στο
+σπίτι
+Предл
+оги
+Ошибки в управлении
+(σε vs. με vs. από); артикли
+после предлогов
+Πήγα στ το
+σχολείο
+Πήγα
+στο
+σχολείο
+Артик
+ли
+Лишние или
+отсутствующие артикли;
+ошибки рода
+Η Κώστας
+(артикль
+неправильного
+рода)
+Ο
+Κώστας
+(мужско
+й род)
+Падеж
+ная
+систем
+а
+Неправильное падежное
+окончание
+(именительный вместо
+винительного)
+Είδα το φίλε
+(вместо φίλο -
+аккузатива)
+Είδα το
+φίλο
+Место
+имени
+я
+Ошибки в перефлексии
+личных/возвратных
+местоимений
+Με λέγονται
+Γιάννης vs. Με
+αγαπά
+Зависит
+от
+контекс
+та
+Слово
+образо
+вание
+Неправильные
+суффиксы (ζ → ζ, σ → σ);
+грамматический класс
+слова
+Τρεχόταν
+(неправильное
+окончание
+имперфекта)
+Έτρεχε
+Входные данные: текст пользователя + референсный корпус корректных текстов
+Процесс:
+1. Токенизация и лемматизация (греческий морфанализатор)
+2. POS-tagging (определение частей речи)
+Алгоритм детекции
+3. Морфологический анализ (падеж, число, род, время)
+4. Синтаксический парсинг (зависимости)
+5. Правило-базированная проверка (встроенные правила согласования,
+управления)
+6. Статистическая проверка (n-граммы корректных последовательностей)
+7. Контекстный анализ (есть ли ошибка в данном контексте?)
+class GrammarErrorDetector:
+def init(self):
+self.rules = self.load_agreement_rules() # Правила согласования
+self.lexicon = self.load_greek_lexicon()
+self.ngram_model = self.load_ngram_model() # Вероятности последовательностей
+def detect_errors(self, text):
+tokens = self.tokenize(text)
+pos_tags = self.pos_tagger.tag(tokens)
+morphology = self.morph_analyzer.analyze(tokens) # падежи, числа, роды
+errors = []
+for i, (token, pos, morph) in enumerate(zip(tokens, pos_tags, morphology)):
+# 1. Проверка согласования
+if pos in ['ADJ', 'DET']: # прилагательное или артикль
+next_noun = self._find_head_noun(tokens, i, pos_tags)
+if next_noun:
+error = self._check_agreement(token, morph, next_noun, pos_tags[nex
+if error:
+errors.append({
+'type': 'agreement',
+'token': token,
+'position': i,
+'suggestion': error['suggestion'],
+'explanation': error['explanation']
+})
+# 2. Проверка глагольной формы
+if pos == 'VERB':
+error = self._check_verb_form(token, morph, tokens, i)
+if error:
+Реализация
+errors.append({
+'type': 'verb_form',
+'token': token,
+'position': i,
+'suggestion': error['suggestion'],
+'explanation': error['explanation']
+})
+# 3. Проверка предлогов и артиклей
+if pos in ['ADP', 'DET']:
+error = self._check_preposition_article(token, tokens, i, morph)
+if error:
+errors.append({
+'type': 'preposition_article',
+'token': token,
+'position': i,
+'suggestion': error['suggestion'],
+'explanation': error['explanation']
+})
+# 4. Статистическая проверка (n-граммы)
+if i < len(tokens) - 1:
+bigram = (tokens[i], tokens[i + 1])
+prob = self.ngram_model.get_probability(bigram)
+if prob < 0.001: # Редкая последовательность
+errors.append({
+'type': 'statistical_anomaly',
+'token': bigram,
+'position': i,
+'note': 'Необычная последовательность слов'
+})
+return errors
+def _check_agreement(self, adj_token, adj_morph, noun_idx, noun_pos):
+noun_token = self.tokens[noun_idx]
+noun_morph = self.morphology[noun_idx]
+# Сравнение рода, числа, падежа
+if (adj_morph['gender'] != noun_morph['gender'] or
+adj_morph['number'] != noun_morph['number'] or
+adj_morph['case'] != noun_morph['case']):
+# Генерирование корректной формы
+corrected_form = self._inflect(adj_token,
+gender=noun_morph['gender'],
+number=noun_morph['number'],
+case=noun_morph['case'])
+return {
+'suggestion': corrected_form,
+'explanation': f"Прилагательное должно согласоваться с существител
+}
+return None
+def _check_verb_form(self, verb, morph, tokens, position):
+# Проверка спряжения по типам спряжения
+# Контекстная проверка согласования времён
+pass
+Для каждой ошибки система генерирует:
+1. Идентификация: Тип ошибки и её позиция в тексте
+2. Объяснение правила: Краткое описание нарушенного грамматического
+правила
+3. Пример корректного использования: Контекст из корпуса или
+сгенерированный
+4. Совет: Мнемоническое средство или практический совет запоминания
+Формат вывода:
+❌ Ошибка #1: Согласование рода-числа
+Позиция: слово 5 ("αγόρι")
+Текст: "Το αγόρι ειναι μεγάλη"
+⚠️ Нарушено правило: Прилагательное должно согласоваться
+с существительным в роде, числе и падеже.
+📝
+Модуль 3: Краткое описание ошибок
+Стратегия объяснения
+✅ Корректный вариант: "Το αγόρι ειναι μεγάλο"
+(Существительное αγόρι - среднего рода, единственное число)
+💡
+Совет: Запомните: αγόρι (среднее) = -ο/-ον,
+κορίτσι (среднее) = -ι/-ιων. Прилагательные тоже должны
+оканчиваться на -ο/-α или -ι/ο.
+class ErrorExplainer:
+def explain(self, error, context_text):
+explanations = {
+'agreement': self._explain_agreement,
+'verb_form': self._explain_verb,
+'preposition_article': self._explain_prep_art,
+'word_order': self._explain_word_order,
+'tense_mismatch': self._explain_tense,
+}
+explain_func = explanations.get(error['type'])
+return explain_func(error, context_text)
+def _explain_agreement(self, error, context):
+return {
+'rule': 'Согласование рода-числа-падежа',
+'brief': f"Слово '{error['token']}' не согласуется с соседним словом в роде
+'example': self._find_similar_correct_example(error),
+'mnemonic': 'Подумайте о чёрных кошках (το μαύρο γατάκι) - все слова
+}
+def _explain_verb(self, error, context):
+return {
+'rule': 'Спряжение глагола',
+'brief': f"Глагол '{error['token']}' спряжен неправильно для данного вре
+'correct_form': error['suggestion'],
+'pattern': self._extract_verb_pattern(error),
+'mnemonic': 'Активные глаголы (1 класс) - ω, εις, ει; 2 класс - ώ, ας, ά'
+}
+Пример объяснений по типам
+🧪 Модуль 4: Адаптивное тестирование
+Стратегия генерации тестов
+Принцип: Тесты генерируются на основе ошибок конкретного пользователя
+Алгоритм адаптации:
+1. Профилирование ошибок пользователя
+Анализ всех предыдущих текстов → матрица ошибок
+Выявление "слабых мест" (категории, где >30% ошибок)
+Приоритизация по частоте ошибок
+2. Генерация целевых тестов
+Для каждого слабого места: 3-5 вопросов разной сложности
+Увеличение сложности по мере улучшения (адаптивная сложность)
+Случайные вопросы из других категорий для полноты
+3. Интерактивная обратная связь
+Мгновенное объяснение ошибки после неправильного ответа
+Контрастивный анализ (правильный ответ + неправильный, почему?)
+Трекинг прогресса
+Типы тестовых вопросов
+1. MULTIPLE CHOICE (выбор из 4-5 вариантов)
+Выберите правильную форму:
+Το αγόρι _____ ευχαριστημένο.
+a) ειναι (ПРАВИЛЬНО)
+b) εισαι
+c) ειμαι
+d) ειστε
+✅ Объяснение: ειναι (3-е лицо единственного числа настоящего времени)
+2. FILL IN THE BLANK (с подсказками)
+Συμπληρώστε το κενό με τη σωστή μορφή του επιθέτου:
+Το _____ κορίτσι (κόκκινο)
+Подсказка: Существительное κορίτσι - среднего рода, единственное число
+✅ Ответ: κόκκινο
+3. ERROR CORRECTION (исправить ошибку)
+Βρείτε και διορθώστε τη γραμματική ερώτηση:
+"Η φίλη μου είναι πολύ έξυπνη και καλή."
+[Это верный пример]
+VS
+"Ο φίλη μου είναι πολύ έξυπνη και καλή."
+✅ Ошибка: "ο φίλη" → "η φίλη" (женский род + артикль)
+4. SENTENCE CONSTRUCTION (построение предложения)
+Постройте предложение из слов:
+διάλεξα / βιβλίο / χθες / ένα / ενδιαφέρον
+✅ Правильный порядок: Χθες διάλεξα ένα ενδιαφέρον βιβλίο.
+5. CLOZE TEST (текст с пропусками)
+Заполните пропуски в тексте:
+"Χθες ____ (πηγαίνω) στο σχολείο. ____ (συναντώ) τον καλύτερο φίλο μου."
+✅ Ответы: πήγα, συνάντησα
+class AdaptiveTestGenerator:
+def init(self, user_error_history):
+self.error_matrix = self._build_error_matrix(user_error_history)
+self.weak_areas = self._identify_weak_areas()
+self.current_level = self._assess_proficiency_level()
+def generate_test(self, target_level='B1', num_questions=10):
+"""
+Генерирует персонализированный тест
+"""
+test = {
+'questions': [],
+'target_level': target_level,
+'difficulty_progression': []
+}
+# 60% вопросов на слабые места пользователя
+weak_area_questions = int(num_questions * 0.6)
+for category in self.weak_areas[:3]:
+q_count = weak_area_questions // 3
+questions = self._generate_questions_for_category(
+category,
+count=q_count,
+difficulty=self.current_level
+)
+test['questions'].extend(questions)
+# 40% - разнообразные вопросы из других категорий
+other_questions = num_questions - len(test['questions'])
+random_questions = self._generate_random_questions(
+count=other_questions,
+exclude_categories=set(c['category'] for c in test['questions']),
+target_level=target_level
+)
+test['questions'].extend(random_questions)
+# Адаптивное увеличение сложности
+Система рейтинга и прогресса
+test['difficulty_progression'] = self._calculate_progression(
+num_questions, self.current_level, target_level
+)
+return test
+def evaluate_answer(self, question_id, user_answer, correct_answer):
+"""
+Оценивает ответ и генерирует объяснение
+"""
+is_correct = user_answer == correct_answer
+result = {
+'is_correct': is_correct,
+'user_answer': user_answer,
+'correct_answer': correct_answer,
+'explanation': self._generate_explanation(question_id, user_answer, correct
+'points': 10 if is_correct else 0
+}
+# Контрастивный анализ для неправильного ответа
+if not is_correct:
+result['comparative_analysis'] = self._compare_answers(
+user_answer, correct_answer, question_id
+)
+result['similar_correct_examples'] = self._find_similar_examples(
+question_id, correct_answer
+)
+return result
+def _generate_explanation(self, q_id, user_ans, correct_ans):
+"""
+Детальное объяснение ошибки
+"""
+question = self.question_db[q_id]
+return f"""
+❌ Вы выбрали: {user_ans}
+✅ Правильный ответ: {correct_ans}
+📚
+Правило: {question['rule']}
+💡
+Объяснение:
+{question['explanation']}
+🔍
+Контрастивный анализ:
+- Ваш ответ: {self._analyze_form(user_ans)}
+- Правильный: {self._analyze_form(correct_ans)}
+📖
+Похожие примеры:
+{self._find_similar_examples(q_id, correct_ans)}
+"""
+def track_progress(self, user_id):
+"""
+Отслеживание прогресса в направлении целевого уровня
+"""
+history = self._get_test_history(user_id)
+progress = {
+'current_level': self.current_level,
+'target_level': 'B1+',
+'estimated_time_to_goal': self._estimate_time(history),
+'accuracy_by_category': self._calculate_accuracy_per_category(history),
+'improvement_trend': self._calculate_trend(history),
+'recommendation': self._generate_recommendation(history)
+}
+return progress
+╔════════════════════════════════════════════════════════════
+╗
+║ 🏆 Greek Proficiency Test - Adaptive Mode ║
+║ ║
+║ Level: A2 → Target: B1 ║
+║ Question 4 / 10 | Accuracy: 75% | Points: 30/40 ║
+Пример интерфейса теста
+╚════════════════════════════════════════════════════════════
+╝
+❓ Συμπληρώστε τη πρόταση με τη σωστή μορφή του ρήματος:
+"Αν ____ χρόνο, θα πήγαινα στη Θεσσαλονίκη."
+a) [ ] εχω (I have)
+b) [ ] εχουν (they have)
+c) [✓] ειχα (I had) ← YOUR ANSWER
+d) [ ] ειχε (he/she had)
+═══════════════════════════════════════════════════════════
+📝
+EXPLANATION:
+✅ Правильный ответ: c) ειχα (I had)
+📚
+Правило: УСЛОВНЫЕ ПРЕДЛОЖЕНИЯ II ТИПА
+Структура: Αν + имперфект, θα + имперфект
+"Αν ειχα χρόνο..." = "Если бы у меня было время..."
+💡
+Ваш ответ НЕПРАВИЛЬНЫЙ:
+Вы выбрали: εχω (настоящее время)
+Должно быть: ειχα (имперфект)
+❌ Почему εχω неправильно:
+εχω = "Если я ИМЕЮ время" (реальное условие)
+Но это условное предложение II типа
+(противоречит реальности) → нужен имперфект
+🔍
+КОНТРАСТИВНЫЙ АНАЛИЗ:
+εχω (настоящее) → Αν εχω χρόνο...
+↳ Реальное условие (возможно в будущем)
+ειχα (имперфект) → Αν ειχα χρόνο...
+↳ Нереальное условие (сейчас времени нет)
+📖
+ПОХОЖИЕ ПРИМЕРЫ:
+✅ "Αν ειχα λεφτά, θα αγόραζα σπίτι."
+(If I had money, I would buy a house.)
+✅ "Αν ηξερε τα ελληνικά, θα μιλούσε με μας."
+(If she knew Greek, she would speak with us.)
+🎯
+СЛЕДУЮЩИЙ ВОПРОС: Условные предложения III типа
+═══════════════════════════════════════════════════════════
+┌─────────────────────────────────────────────────────┐
+│ PROFICIENCY PROGRESSION DASHBOARD │
+├─────────────────────────────────────────────────────┤
+│ │
+│ 📈 Current Level: A2.5 │
+│ 🎯 Target Level: B1 (by March 2026) │
+│ │
+│ Overall Progress: ████████░░ 75% │
+│ Vocabulary: ███████░░░ 70% │
+│ Grammar: █████████░ 85% │
+│ Syntax: ██████░░░░ 60% │
+│ Fluency: ████░░░░░░ 40% │
+│ │
+├─────────────────────────────────────────────────────┤
+│ Weak Areas (Need Attention): │
+│ 1. ⚠️ Subordinate clauses - 45% accuracy │
+│ 2. ⚠️ Conditional sentences - 50% accuracy │
+│ 3. ⚠️ Passive voice - 55% accuracy │
+├─────────────────────────────────────────────────────┤
+│ Recommendations: │
+│ ✓ 5/5 tests completed this week │
+│ ✓ Studied 250/300 target words │
+│ → Focus on conditional clauses next week │
+│ → Review passive constructions daily (15 min) │
+├─────────────────────────────────────────────────────┤
+│ Estimated completion: March 15, 2026 │
+│ Success rate: 75% → 85% needed for B1 │
+└─────────────────────────────────────────────────────┘
+class ExamPreparationTracker:
+def generate_exam_readiness_report(self, user_id, target_exam='DELF_B1'):
+"""
+Генерирует отчёт о готовности к экзамену
+"""
+exam_standards = self.load_exam_standards(target_exam)
+user_performance = self._get_performance_metrics(user_id)
+report = {
+'exam': target_exam,
+'estimated_readiness': self._calculate_readiness(
+user_performance, exam_standards
+📊
+Модуль 5: Трекинг прогресса к целевому уровню
+Метрики и панель управления
+Экзаменационная подготовка
+),
+'strengths': self._identify_strengths(user_performance, exam_standards),
+'weaknesses': self._identify_weaknesses(user_performance, exam_standard
+'study_plan': self._generate_study_plan(
+weaknesses, days_until_exam=60
+),
+'predicted_score': self._estimate_score(user_performance),
+'recommended_resources': [
+'Official past exam papers',
+'Targeted grammar drills',
+'Speaking practice sessions',
+'Writing correction cycles'
+]
+}
+return report
+🛠️Технический стек
+Компонент Технология Причина
+NLP
+(греческий)
+SpaCy (GyGre) /
+UDPipe
+Морфологический
+анализ, POS-tagging
+Парсинг
+Dependency parser
+(UDPipe)
+Синтаксический анализ
+предложений
+CEFR
+классифика
+ция
+Custom ensemble Комбинация правил + ML
+Хранилище
+текстов
+PostgreSQL +
+Elasticsearch
+Индексирование
+примеров, поиск
+Корпус
+греческого
+Google Ngrams
+(Greek) /
+OpenSubtitles
+Частотные данные
+Backend
+Python (FastAPI) /
+Node.js
+API для генерации тестов
+Frontend React / Vue.js
+Интерактивные тесты,
+панель управления
+ML модели
+BERT (greek-BERT) /
+GPT
+Контекстный анализ,
+генерация объяснений
+POST /api/analyze
+📦
+API Interface
+Основные endpoints
+Input: {"text": "το κείμενο του χρήστη"}
+Output: {
+"cefr_level": "A2"
+,
+"confidence": 0.85,
+"errors": [
+{
+"type": "agreement"
+,
+"position": 5,
+"token": "μεγάλη"
+,
+"suggestion": "μεγάλο"
+,
+"explanation": "..."
+}
+]
+}
+POST /api/generate-test
+Input: {
+"user_id": "123"
+,
+"target_level": "B1"
+,
+"num_questions": 10,
+"focus_areas": ["conditionals"
+,
+"passive"]
+}
+Output: { "test_id": "..."
+,
+"questions": [...] }
+POST /api/evaluate
+Input: {
+"test_id": "..."
+,
+"question_id": "5"
+,
+"user_answer": "ειχα"
+}
+Output: {
+"is_correct": true,
+"explanation": "..."
+,
+"points": 10
+}
+GET /api/progress/:user_id
+Output: {
+"current_level": "A2.5"
+,
+"target_level": "B1"
+,
+"progress_percentage": 75,
+"weak_areas": [...]
+}
+🚀
+План внедрения
+Фаза 1 (Месяц 1-2): MVP
+[ ] Интеграция греческого морфанализатора
+[ ] Базовая CEFR диагностика (A1-B1)
+[ ] Детекция 5 основных типов ошибок
+[ ] Простые 10-вопросные тесты
+Фаза 2 (Месяц 2-3): Расширение
+[ ] Полная CEFR (A1-C2)
+[ ] Диагностика всех 10+ типов ошибок
+[ ] Адаптивные тесты с трекингом
+[ ] LLM-генерация объяснений
+Фаза 3 (Месяц 3-4): Оптимизация
+[ ] Интеграция настоящих экзаменационных материалов
+[ ] Мобильное приложение (iOS/Android)
+[ ] Community features (обмен текстами, рейтинги)
+[ ] Экспорт результатов для преподавателей
+📚
+Использование для личной подготовки
+Твоя текущая ситуация:
+Статус: A2 → цель B1 (май 2026)
+Используемые ресурсы:
+1. Загрузи образцы своих текстов (письма, заметки о поэзии, описания
+погружений)
+2. Система определит текущий уровень и выявит систематические ошибки
+3. Получи персонализированный план: 4-5 слабых мест для фокуса
+4. Еженедельные адаптивные тесты с увеличением сложности
+Ожидаемый результат:
+Месяц 1-2: Осознание ошибок + базовые исправления
+Месяц 2-3: Интуитивное применение правил
+Месяц 3-4: B1-ready (способен к спонтанному общению на знакомые темы)
+📖
+Примеры использования
+Пример 1: Анализ текста
+Ваш текст:
+"Χθες πήγαν στο θάλασσα και έκανα κολυμβητή.
+Ήταν πολύ ωραίο και είδα πολλή ψάρια."
+Результат анализа:
+✅ Уровень: A2 (фраза в диапазоне 1200-1600 слов)
+❌ Ошибки (3):
+1. Согласование субъекта-глагола
+"χθες πήγαν ... έκανα"
+→ Они пошли (3л мн) но я сделал (1л ед)
+Предложение: "Χθες πήγα..." или "Χθες πήγαμε..."
+2. Винительный падеж + артикль
+"είδα πολλή ψάρια"
+→ ψάρια (мн ч, аккузатив) но πολλή (жен род)
+Правка: "είδα πολλά ψάρια"
+3. Лексика (A2→B1)
+"κολυμβητή" (странный выбор)
+→ Лучше: "κολυμπούσα" (плыла)
+📞
+Support & Resources
+Греческий морфанализатор: https://www.morphgnt.org/
+Корпус текстов: https://www.ime.uoa.gr/gr/
+CEFR стандарты: https://www.coe.int/en/web/common-european-framework-refere
+nce-languages
+Контакт поддержки: linguist@module.gr
+Version: 1.0
+Last Updated: January 2026
+Status: Ready for development
