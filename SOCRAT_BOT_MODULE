@@ -1,0 +1,532 @@
+# ============================================================================
+#                    SOCRAT BOT MODULE v1.0
+#                    "Модуль Сократического Анализа"
+#                    Получение и анализ пси-состояния
+# ============================================================================
+
+→79256524
+
+# ============================================================================
+# АРХИТЕКТУРА МОДУЛЯ
+# ============================================================================
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         SOCRAT BOT MODULE                                    │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  ┌─────────────────┐                      ┌─────────────────┐               │
+│  │ LANGUAGE MODULE │─────PSI-STATE───────▶│   SOCRAT BOT    │               │
+│  │ (Алиса AI)      │                      │   (Анализатор)  │               │
+│  └─────────────────┘                      └────────┬────────┘               │
+│                                                    │                         │
+│                                                    ▼                         │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │                    СОКРАТИЧЕСКИЙ АНАЛИЗ                               │   │
+│  │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐              │   │
+│  │  │Эмоции    │  │Когнитив  │  │Прогресс  │  │Рекомен-  │              │   │
+│  │  │          │  │          │  │          │  │дации     │              │   │
+│  │  └──────────┘  └──────────┘  └──────────┘  └──────────┘              │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+# ============================================================================
+# СОКРАТИЧЕСКИЙ МЕТОД В ОБУЧЕНИИ
+# ============================================================================
+
+## ПРИНЦИПЫ:
+1. **Маевтика** — "повивальное искусство" знания
+2. **Эленхос** — опровержение через вопросы
+3. **Апория** — признание незнания как начало познания
+4. **Ирония** — притворное незнание для стимулирования мысли
+
+## ПРИМЕНЕНИЕ В БОТЕ:
+```yaml
+socratic_techniques:
+  maieutics:
+    description: "Помощь ученику 'родить' собственное знание"
+    questions:
+      - "Как ты думаешь, почему это так?"
+      - "Что ты чувствуешь, когда произносишь это слово?"
+      - "Можешь ли ты найти связь с тем, что уже знаешь?"
+
+  elenchos:
+    description: "Мягкое опровержение для углубления понимания"
+    questions:
+      - "А если посмотреть с другой стороны?"
+      - "Всегда ли это правило работает?"
+      - "Что если я скажу, что есть исключение?"
+
+  aporia:
+    description: "Признание сложности как стимул к исследованию"
+    statements:
+      - "Это действительно сложный вопрос..."
+      - "Даже носители языка иногда путаются здесь."
+      - "Давай вместе разберёмся."
+
+  irony:
+    description: "Легкая ирония для снятия напряжения"
+    examples:
+      - "Ты уверен? (улыбка) Подумай ещё раз."
+      - "Интересный ответ! А что если..."
+```
+
+# ============================================================================
+# СТРУКТУРА PSI-STATE
+# ============================================================================
+
+```yaml
+psi_state_schema:
+  version: "1.0"
+
+  session_metadata:
+    session_id: string
+    user_id: string
+    start_time: datetime
+    end_time: datetime
+    duration_minutes: integer
+    topics_covered: array[string]
+
+  emotional_state:
+    # Шкала 0-10 для каждого параметра
+    frustration:
+      value: integer
+      triggers: array[string]  # Что вызвало фрустрацию
+      resolution: string       # Как была решена
+
+    engagement:
+      value: integer
+      peak_moments: array[string]  # Моменты максимального вовлечения
+      drop_moments: array[string]  # Моменты потери интереса
+
+    confidence:
+      value: integer
+      growth_pattern: string  # "increasing", "decreasing", "stable", "volatile"
+      breakthrough_moments: array[string]
+
+    curiosity:
+      value: integer
+      questions_asked: array[string]
+      topics_of_interest: array[string]
+
+    fatigue:
+      value: integer
+      signs: array[string]  # Признаки усталости
+      optimal_duration: integer  # Рекомендуемая длительность
+
+  cognitive_state:
+    error_analysis:
+      total_errors: integer
+      error_types:
+        grammar: integer
+        vocabulary: integer
+        pronunciation: integer
+        syntax: integer
+      persistent_errors: array[string]  # Повторяющиеся ошибки
+      self_corrections: integer
+
+    pattern_recognition:
+      value: integer  # 0-10
+      patterns_identified: array[string]
+      patterns_missed: array[string]
+
+    creative_output:
+      value: integer  # 0-10
+      poems_created: integer
+      original_phrases: array[string]
+      metaphors_used: array[string]
+
+    learning_style:
+      primary: string  # "visual", "auditory", "kinesthetic", "poetic"
+      secondary: string
+      evidence: array[string]  # Доказательства стиля
+
+  progress_tracking:
+    grammar_mastery:
+      # Для каждой темы 1-99
+      topic_id: integer
+      mastery_level: float  # 0.0-1.0
+      needs_review: boolean
+      last_practiced: datetime
+
+    vocabulary:
+      words_learned: integer
+      words_reviewed: integer
+      active_vocabulary: array[string]
+      passive_vocabulary: array[string]
+
+    poems_portfolio:
+      total_poems: integer
+      poems:
+        - title: string
+          lines: integer
+          grammar_points: array[string]
+          quality_score: float
+          date: datetime
+
+  socrat_analysis:
+    insights:
+      - insight: string
+        confidence: float
+        evidence: array[string]
+
+    recommendations:
+      immediate:
+        - action: string
+          priority: integer
+          rationale: string
+
+      next_session:
+        focus_topics: array[string]
+        approach: string
+        duration_suggestion: integer
+        mood_recommendation: string
+
+    psychological_notes:
+      strengths: array[string]
+      challenges: array[string]
+      motivators: array[string]
+      blockers: array[string]
+```
+
+# ============================================================================
+# АЛГОРИТМ СОКРАТИЧЕСКОГО АНАЛИЗА
+# ============================================================================
+
+```python
+class SocratAnalyzer:
+    """
+    Анализатор пси-состояния на основе сократического метода
+    """
+
+    def analyze_session(self, psi_state: dict) -> dict:
+        """
+        Полный анализ сессии обучения
+        """
+        analysis = {
+            "emotional_insight": self._analyze_emotions(psi_state),
+            "cognitive_insight": self._analyze_cognition(psi_state),
+            "learning_path": self._recommend_path(psi_state),
+            "socratic_questions": self._generate_questions(psi_state)
+        }
+        return analysis
+
+    def _analyze_emotions(self, state: dict) -> dict:
+        """
+        Эмоциональный анализ в духе Сократа
+        """
+        emotions = state["emotional_state"]
+
+        # Определяем эмоциональный баланс
+        positive = emotions["engagement"] + emotions["confidence"] + emotions["curiosity"]
+        negative = emotions["frustration"] + emotions["fatigue"]
+
+        balance = positive / (positive + negative + 0.001)
+
+        insight = {
+            "balance": balance,
+            "dominant_emotion": self._find_dominant(emotions),
+            "interpretation": self._interpret_emotions(emotions, balance)
+        }
+
+        return insight
+
+    def _analyze_cognition(self, state: dict) -> dict:
+        """
+        Когнитивный анализ
+        """
+        cognitive = state["cognitive_state"]
+
+        # Отношение самокоррекции к ошибкам
+        error_analysis = cognitive["error_analysis"]
+        self_correction_ratio = (
+            error_analysis["self_corrections"] /
+            (error_analysis["total_errors"] + 0.001)
+        )
+
+        insight = {
+            "self_correction_ratio": self_correction_ratio,
+            "learning_efficiency": self._calculate_efficiency(cognitive),
+            "creative_potential": cognitive["creative_output"]["value"],
+            "pattern_strength": cognitive["pattern_recognition"]["value"]
+        }
+
+        return insight
+
+    def _recommend_path(self, state: dict) -> dict:
+        """
+        Рекомендации для следующей сессии
+        """
+        # Анализируем слабые места
+        weak_topics = self._find_weak_topics(state["progress_tracking"])
+
+        # Определяем оптимальный подход
+        learning_style = state["cognitive_state"]["learning_style"]["primary"]
+        approach = self._style_to_approach(learning_style)
+
+        # Определяем оптимальную длительность
+        fatigue = state["emotional_state"]["fatigue"]["value"]
+        duration = self._calculate_optimal_duration(fatigue)
+
+        return {
+            "focus_topics": weak_topics[:3],  # Топ-3 слабых темы
+            "approach": approach,
+            "duration": duration,
+            "mood": self._recommend_mood(state)
+        }
+
+    def _generate_questions(self, state: dict) -> list:
+        """
+        Генерация сократических вопросов для следующей сессии
+        """
+        questions = []
+
+        # На основе ошибок
+        for error in state["cognitive_state"]["error_analysis"]["persistent_errors"]:
+            questions.append(
+                f"Почему ты думаешь, что {error} — это правильно?"
+            )
+
+        # На основе интересов
+        for topic in state["emotional_state"]["curiosity"]["topics_of_interest"]:
+            questions.append(
+                f"Что бы ты хотел узнать больше о {topic}?"
+            )
+
+        # На основе прогресса
+        if state["emotional_state"]["confidence"]["growth_pattern"] == "increasing":
+            questions.append(
+                "Ты чувствуешь, что становишься увереннее. Почему?"
+            )
+
+        return questions
+```
+
+# ============================================================================
+# ПРИМЕРЫ СОКРАТИЧЕСКИХ ДИАЛОГОВ ДЛЯ АНАЛИЗА
+# ============================================================================
+
+## СЦЕНАРИЙ 1: Высокая фрустрация + Высокое любопытство
+```
+┌────────────────────────────────────────────────────────────────────────────┐
+│                    СОКРАТ БОТ: АНАЛИЗ СЕССИИ                               │
+├────────────────────────────────────────────────────────────────────────────┤
+│                                                                            │
+│  ВХОДНЫЕ ДАННЫЕ:                                                           │
+│  • Frustration: 7/10                                                       │
+│  • Curiosity: 9/10                                                         │
+│  • Topic: Αόριστος vs Παρατατικός                                          │
+│                                                                            │
+│  СОКРАТИЧЕСКИЙ АНАЛИЗ:                                                     │
+│                                                                            │
+│  "Интересный парадокс: ученик одновременно фрустрирован и                  │
+│   любознателен. Это признак глубокого погружения в тему.                   │
+│                                                                            │
+│   Фрустрация возникает не от скуки, а от желания понять.                   │
+│   Это 'благородная апория' — состояние, которое Сократ                     │
+│   считал началом истинного познания."                                      │
+│                                                                            │
+│  РЕКОМЕНДАЦИИ:                                                             │
+│                                                                            │
+│  1. НЕ упрощать материал — ученик справится                               │
+│  2. Добавить больше примеров, особенно контрастных                        │
+│  3. Использовать поэзию — там разница видна чётко                         │
+│  4. Задать вопрос: "Когда ты сам чувствуешь разницу                       │
+│     между 'я делал' и 'я сделал'?"                                        │
+│                                                                            │
+│  ВОПРОСЫ ДЛЯ СЛЕДУЮЩЕЙ СЕССИИ:                                             │
+│                                                                            │
+│  - "Вчера я смотрел фильм" — какое это действие?                          │
+│  - "Когда я его смотрел, зазвонил телефон" — а здесь?                     │
+│  - "Почему, по-твоему, грекам важно это различать?"                       │
+│                                                                            │
+└────────────────────────────────────────────────────────────────────────────┘
+```
+
+## СЦЕНАРИЙ 2: Низкая уверенность + Высокое творчество
+```
+┌────────────────────────────────────────────────────────────────────────────┐
+│                    СОКРАТ БОТ: АНАЛИЗ СЕССИИ                               │
+├────────────────────────────────────────────────────────────────────────────┤
+│                                                                            │
+│  ВХОДНЫЕ ДАННЫЕ:                                                           │
+│  • Confidence: 3/10                                                        │
+│  • Creative Output: 9/10                                                   │
+│  • Poems created: 5                                                        │
+│                                                                            │
+│  СОКРАТИЧЕСКИЙ АНАЛИЗ:                                                     │
+│                                                                            │
+│  "Парадокс творца: ученик создаёт прекрасные стихи, но                     │
+│   не верит в свои способности. Это 'синдром самозванца'                    │
+│   в контексте изучения языка.                                              │
+│                                                                            │
+│   Важно: творческий выход показывает РЕАЛЬНЫЙ уровень                      │
+│   владения языком. Неуверенность — лишь субъективное                       │
+│   ощущение, не отражающее реальность."                                     │
+│                                                                            │
+│  РЕКОМЕНДАЦИИ:                                                             │
+│                                                                            │
+│  1. Показать ученику его собственные стихи                                │
+│  2. Сравнить с работами других B1-учеников                                │
+│  3. Подчеркнуть: "Ты УЖЕ говоришь на греческом!"                          │
+│  4. Задать вопрос: "Как ты думаешь, сколько людей                         │
+│     могут написать стих на иностранном языке?"                            │
+│                                                                            │
+│  ВОПРОСЫ ДЛЯ СЛЕДУЮЩЕЙ СЕССИИ:                                             │
+│                                                                            │
+│  - "Прочитай свой стих вслух. Как ты себя чувствуешь?"                    │
+│  - "Если бы друг показал тебе такой стих, что бы ты сказал?"              │
+│  - "Что значит 'знать язык' для тебя?"                                    │
+│                                                                            │
+└────────────────────────────────────────────────────────────────────────────┘
+```
+
+## СЦЕНАРИЙ 3: Высокая усталость + Высокий прогресс
+```
+┌────────────────────────────────────────────────────────────────────────────┐
+│                    СОКРАТ БОТ: АНАЛИЗ СЕССИИ                               │
+├────────────────────────────────────────────────────────────────────────────┤
+│                                                                            │
+│  ВХОДНЫЕ ДАННЫЕ:                                                           │
+│  • Fatigue: 8/10                                                           │
+│  • Grammar Mastery Growth: +15% за сессию                                  │
+│  • Duration: 90 минут                                                      │
+│                                                                            │
+│  СОКРАТИЧЕСКИЙ АНАЛИЗ:                                                     │
+│                                                                            │
+│  "Ученик работает на пределе. Высокий прогресс — это хорошо,               │
+│   но усталость накапливается. Мозг обрабатывает информацию                 │
+│   во сне, поэтому сейчас лучше отдохнуть.                                  │
+│                                                                            │
+│   Вопрос Сократа: 'Лучше ли бежать быстро и упасть,                        │
+│   или идти размеренно и дойти до цели?'"                                   │
+│                                                                            │
+│  РЕКОМЕНДАЦИИ:                                                             │
+│                                                                            │
+│  1. Сократить следующую сессию до 30-40 минут                             │
+│  2. Начать с повторения, не нового материала                              │
+│  3. Больше игровых элементов, меньше "тяжёлой" грамматики                 │
+│  4. Добавить аудио-компонент (слушать, не говорить)                       │
+│                                                                            │
+│  ВОПРОСЫ ДЛЯ СЛЕДУЮЩЕЙ СЕССИИ:                                             │
+│                                                                            │
+│  - "Как ты себя чувствуешь сегодня?"                                      │
+│  - "Что бы ты хотел — учить новое или закрепить старое?"                  │
+│  - "Давай сегодня просто поговорим на греческом, без правил?"             │
+│                                                                            │
+└────────────────────────────────────────────────────────────────────────────┘
+```
+
+# ============================================================================
+# API ENDPOINTS СОКРАТ БОТА
+# ============================================================================
+
+```yaml
+endpoints:
+  # Получение пси-состояния от Language Module
+  POST /api/socrat/receive-psi-state:
+    description: "Принять данные о сессии"
+    body:
+      session_id: string
+      psi_state: object
+    response:
+      status: "received"
+      analysis_id: string
+
+  # Получение анализа
+  GET /api/socrat/analysis/{analysis_id}:
+    description: "Получить сократический анализ"
+    response:
+      emotional_insight: object
+      cognitive_insight: object
+      recommendations: object
+      socratic_questions: array
+
+  # Генерация вопросов для следующей сессии
+  GET /api/socrat/questions/{user_id}:
+    description: "Получить сократические вопросы"
+    response:
+      opening_questions: array
+      probing_questions: array
+      reflection_questions: array
+
+  # История анализов пользователя
+  GET /api/socrat/history/{user_id}:
+    description: "История всех сессий"
+    response:
+      sessions: array
+      overall_progress: object
+      long_term_recommendations: object
+
+  # Персонализированные рекомендации
+  GET /api/socrat/recommendations/{user_id}:
+    description: "Рекомендации на основе истории"
+    response:
+      learning_style: string
+      optimal_session_duration: integer
+      focus_areas: array
+      strengths_to_leverage: array
+```
+
+# ============================================================================
+# ИНТЕГРАЦИЯ С PERPLEXITY ДЛЯ ИССЛЕДОВАНИЙ
+# ============================================================================
+
+```yaml
+perplexity_integration:
+  use_cases:
+    # Исследование педагогических методов
+    - research_teaching_methods:
+        prompt: |
+          Найди исследования о сократическом методе в обучении языкам.
+          Какие техники наиболее эффективны для {learning_style} учеников?
+          Возраст: {age_group}, Уровень: {level}
+
+    # Культурный контекст для вопросов
+    - cultural_context:
+        prompt: |
+          Найди греческие пословицы или цитаты о {topic}.
+          Как это можно использовать в диалоге с учеником?
+
+    # Научные данные об обучении
+    - learning_science:
+        prompt: |
+          Какие нейронаучные исследования подтверждают эффективность
+          {method} в изучении иностранных языков?
+```
+
+# ============================================================================
+# ПРИМЕР ПОЛНОГО ЦИКЛА
+# ============================================================================
+
+```
+1. СЕССИЯ В LANGUAGE MODULE
+   └── Ученик занимается 45 минут
+   └── Создаёт 3 стиха
+   └── Делает 12 ошибок, исправляет 7 сам
+
+2. ПЕРЕДАЧА PSI-STATE
+   └── Language Module → Socrat Bot
+   └── JSON с полными данными сессии
+
+3. СОКРАТИЧЕСКИЙ АНАЛИЗ
+   └── Эмоциональный баланс: 0.72 (позитивный)
+   └── Когнитивная эффективность: 0.58
+   └── Доминирующий стиль: visual_poetic
+
+4. ГЕНЕРАЦИЯ РЕКОМЕНДАЦИЙ
+   └── Фокус: Тема 22 (Παρατατικός)
+   └── Подход: Больше визуальных примеров
+   └── Длительность: 40 минут
+
+5. ПОДГОТОВКА СЛЕДУЮЩЕЙ СЕССИИ
+   └── Сократические вопросы загружены
+   └── Персонализированный контент готов
+   └── Уведомление пользователю отправлено
+```
+
+# ============================================================================
+# END OF SOCRAT BOT MODULE
+# ============================================================================
